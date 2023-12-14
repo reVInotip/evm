@@ -1,5 +1,6 @@
 #include <iostream>
 #include <x86intrin.h>
+#include <float.h>
 
 using namespace std;
 
@@ -56,28 +57,32 @@ int *CreateRandom(int size) {
 }
 
 int main() {
-    int size[12] = {
-        64 * 1024 / 4,        // 64 KB
-        128 * 1024 / 4,       // 128 KB
-        256 * 1024 / 4,       // 256 KB
-        512 * 1024 / 4,       // 512 KB
-        768 * 1024 / 4,       // 768 KB
-        1024 * 1024 / 4,      // 1 MB
-        4 * 1024 * 1024 / 4,  // 4 MB
-        6 * 1024 * 1024 / 4,  // 6 MB
-        8 * 1024 * 1024 / 4,  // 8 MB
+    int size[16] = {
+        1 * 1024 / 4,   // 1 KB
+        2 * 1024 / 4,   // 2 KB
+        4 * 1024 / 4,   // 4 KB
+        8 * 1024 / 4,   // 8 KB
+        16 * 1024 / 4,  // 16 KB
+        32 * 1024 / 4,  // 32 KB
+        64 * 1024 / 4,  // 64 KB
+        128 * 1024 / 4,  // 128 KB
+        256 * 1024 / 4,  // 256 KB
+        512 * 1024 / 4, // 512 KB
+        1 * 1024 * 1024 / 4, // 1 MB
+        2 * 1024 * 1024 / 4, // 2 MB
+        4 * 1024 * 1024 / 4, // 4 MB
+        8 * 1024 * 1024 / 4, // 8 MB
         16 * 1024 * 1024 / 4, // 16 MB
-        24 * 1024 * 1024 / 4, // 24 MB
         32 * 1024 * 1024 / 4  // 32 MB
     };
 
     int *arr1;
     int *arr2;
     int *arr3;
-    double avgTime = 0;
+    double minTime = DBL_MAX;
     int k = 0;
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 16; i++) {
         std::cout << "===============" << std::endl;
         std::cout << i + 1 << " Memory size in KB: " << size[i] * 4 / 1024 << std::endl;
         arr1 = CreateStraight(size[i]);
@@ -88,14 +93,13 @@ int main() {
             k += Run(arr1, size[i], K);
             double end = __rdtsc();
 
-            avgTime += ((double)(end - start));
+            minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
-
-        avgTime /= K;
-        avgTime /= K;
-        avgTime /= size[i];
-        std::cout << " Time for straight: " << avgTime << std::endl;
-        avgTime = 0;
+        
+        minTime /= K;
+        minTime /= size[i];
+        std::cout << " Time for straight: " << minTime << std::endl;
+        minTime = DBL_MAX;
 
         arr2 = CreateReverse(size[i]);
 
@@ -105,14 +109,13 @@ int main() {
             k += Run(arr2, size[i], K);
             double end = __rdtsc();
 
-            avgTime += ((double)(end - start));
+            minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
 
-        avgTime /= K;
-        avgTime /= K;
-        avgTime /= size[i];
-        std::cout << " Time for reverse: " << avgTime << std::endl;
-        avgTime = 0;
+        minTime /= K;
+        minTime /= size[i];
+        std::cout << " Time for reverse: " << minTime << std::endl;
+        minTime = DBL_MAX;
 
         arr3 = CreateRandom(size[i]);
 
@@ -122,15 +125,14 @@ int main() {
             k += Run(arr3, size[i], K);
             double end = __rdtsc();
 
-            avgTime += ((double)(end - start));
+            minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
 
-        avgTime /= K;
-        avgTime /= K;
-        avgTime /= size[i];
-        std::cout << " Time for random: " << avgTime << std::endl
+        minTime /= K;
+        minTime /= size[i];
+        std::cout << " Time for random: " << minTime << std::endl
                   << "===============" << std::endl;
-        avgTime = 0;
+        minTime = DBL_MAX;
     }
 
     std::cout << k;

@@ -60,9 +60,9 @@ int main(int, char **) {
     putText(frame, "HEIGHT: " + std::to_string(modifiedFrame.rows), Point(10, 60), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 0), 2);
     putText(frame, "WIDTH: " + std::to_string(modifiedFrame.cols), Point(10, 100), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 0), 2);
 
-    fps += getTickFrequency() / (getTickCount() - start);
+    fps += 1.0 / (getTickCount() - start);
     if (i == 10) {
-      currFps = fps / 10;
+      currFps = (getTickFrequency() * fps) / 10;
       i = 0;
       fps = 0;
     }
