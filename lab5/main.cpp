@@ -1,4 +1,3 @@
-#include <bits/types/struct_timespec.h>
 #include <cstdint>
 #include <ctime>
 #include <opencv4/opencv2/videoio.hpp>

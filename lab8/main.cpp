@@ -88,13 +88,15 @@ int main() {
         arr1 = CreateStraight(size[i]);
 
         k += Run(arr1, size[i], 1);
-        for (int k = 0; k < K; k++) {
+        for (int j = 0; j < K; j++) {
             double start = __rdtsc();
             k += Run(arr1, size[i], K);
             double end = __rdtsc();
 
             minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
+
+        delete [] arr1;
         
         minTime /= K;
         minTime /= size[i];
@@ -104,13 +106,15 @@ int main() {
         arr2 = CreateReverse(size[i]);
 
         k += Run(arr2, size[i], 1);
-        for (int k = 0; k < K; k++) {
+        for (int j = 0; j < K; j++) {
             double start = __rdtsc();
             k += Run(arr2, size[i], K);
             double end = __rdtsc();
 
             minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
+
+        delete [] arr2;
 
         minTime /= K;
         minTime /= size[i];
@@ -120,13 +124,15 @@ int main() {
         arr3 = CreateRandom(size[i]);
 
         k += Run(arr3, size[i], 1);
-        for (int k = 0; k < K; k++) {
+        for (int j = 0; j < K; j++) {
             double start = __rdtsc();
             k += Run(arr3, size[i], K);
             double end = __rdtsc();
 
             minTime = minTime > ((double)(end - start)) ? ((double)(end - start)) : minTime;
         }
+
+        delete [] arr3;
 
         minTime /= K;
         minTime /= size[i];
